@@ -18,9 +18,13 @@ public class HttpProxy extends Thread {
 	static public boolean logging = false;
 	static public boolean proxy = false;
 	static public OutputStream log=null;
-	// 传入数据用的Socket
+	/**
+	 * 传入数据用的Socket
+	 */
 	protected Socket socket;
-	// 上级代理服务器，可选
+	/**
+	 * 上级代理服务器，可选
+	 */
 	static private String parent=null;
 	static private int parentPort=-1;
 	static public void setParentProxy(String name, int pport) {
@@ -43,8 +47,15 @@ public class HttpProxy extends Thread {
 
 	}
 
-	// 在给定Socket上创建一个代理线程。
-	public HttpProxy(Socket s) { socket=s; start(); }
+	/**
+	 * 在给定Socket上创建一个代理线程。
+	 * @param s
+	 */
+	public HttpProxy(Socket s)
+	{
+		socket=s;
+		start();
+	}
 
 	public void writeLog(int c, boolean browser) throws IOException {
 		log.write(c);
@@ -100,7 +111,8 @@ public class HttpProxy extends Thread {
 							line=line+(char)c;
 							break;
 						case 2:
-							if (space) continue; // 跳过多个空白字符
+							// 跳过多个空白字符
+							if (space) continue;
 							state=3;
 						case 3:
 							if (space) {
@@ -149,6 +161,7 @@ public class HttpProxy extends Thread {
 							}
 							host=host+(char)c;
 							break;
+							default:break;
 					}
 				}
 			}
@@ -203,7 +216,8 @@ public class HttpProxy extends Thread {
 				try {
 					java.lang.reflect.Constructor cons = clobj.getDeclaredConstructor(sarg);
 					arg[0]=ssock.accept();
-					cons.newInstance(arg); // 创建HttpProxy或其派生类的实例
+					// 创建HttpProxy或其派生类的实例
+					cons.newInstance(arg);
 				} catch (Exception e) {
 					Socket esock = (Socket)arg[0];
 					try { esock.close(); } catch (Exception ec) {}
@@ -214,7 +228,10 @@ public class HttpProxy extends Thread {
 	}
 
 
-	// 测试用的简单main方法
+	/**
+	 * 测试用的简单main方法
+	 * @param args
+	 */
 	static public void main(String args[]) {
 		HttpProxy.proxy=true;
 		HttpProxy.setParentProxy(HttpProxy.proxy);
