@@ -6,7 +6,6 @@ package pub.zzd.main;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import pub.zzd.utils.MyC3P0Utils;
-
 import java.net.*;
 import java.io.*;
 
@@ -77,8 +76,10 @@ public class HttpProxy extends Thread {
 	}
 
 
-
-	// 执行操作的线程
+	/**
+	 * 执行操作的线程
+	 */
+	@Override
 	public void run() {
 		String line;
 		String host;
@@ -98,6 +99,7 @@ public class HttpProxy extends Thread {
 					int c=is.read();
 					if (c==-1) break;
 					if (logging) writeLog(c,true);
+					// 判断指定字符是否为空白字符，空白符包含：空格、tab 键、换行符。
 					space=Character.isWhitespace((char)c);
 					switch (state) {
 						case 0:
@@ -142,7 +144,6 @@ public class HttpProxy extends Thread {
 										break;
 									} catch (Exception e) { }
 									// 等待
-									System.out.println("等待");
 									Thread.sleep(CONNECT_PAUSE);
 								}
 								if (outbound==null){
@@ -169,8 +170,16 @@ public class HttpProxy extends Thread {
 
 		} catch (Exception e) { }
 		finally {
-			try { socket.close();} catch (Exception e1) {}
-			try { outbound.close();} catch (Exception e2) {}
+			try {
+				socket.close();
+			} catch (Exception e1) {
+
+			}
+			try {
+				outbound.close();
+			} catch (Exception e2) {
+
+			}
 		}
 	}
 
